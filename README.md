@@ -4,6 +4,10 @@
 
 A GitBucket plugin for rendering swagger (openAPI) file using [swagger-ui](https://github.com/swagger-api/swagger-ui).
 
+## Screenshot
+
+![screenshot](https://github.com/onukura/gitbcket-swagger-plugin/blob/assets/screenshot.png?raw=true)
+
 ## Install
 
 1. Download *.jar from Releases.
