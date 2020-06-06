@@ -37,8 +37,9 @@ class SwaggerRenderer extends Renderer {
     )
 
     if (processFilePatterns.contains(basename)) {
-      s"""<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
-        <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
+      s"""
+       <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
+       <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
        <script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
        <div id="swagger-viewer">
        <script>
