@@ -38,20 +38,20 @@ class SwaggerRenderer extends Renderer {
 
     if (processFilePatterns.contains(basename)) {
       s"""
-       <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
-       <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
-       <script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
-       <div id="swagger-viewer">
-       <script>
-        window.onload = function() {
-          const ui = SwaggerUIBundle({
-            url: "${context.request.getRequestURL + "?raw=true"}",
-            dom_id: '#swagger-viewer'
-          })
-          window.ui = ui
-        }
-       </script>
-       """
+      <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
+      <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
+      <script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
+      <div id="swagger-viewer">
+      <script>
+      window.onload = function() {
+        const ui = SwaggerUIBundle({
+          url: "${context.request.getRequestURL + "?raw=true"}",
+          dom_id: '#swagger-viewer'
+        })
+        window.ui = ui
+      }
+      </script>
+      """
     } else {
       content
     }
