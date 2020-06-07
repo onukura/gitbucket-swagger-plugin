@@ -44,4 +44,4 @@ This plugin process files only with its name in the following list.
 
 Plugin version|GitBucket version
 :---|:---
-1.0|4.32.x
+1.0|4.32.x -
