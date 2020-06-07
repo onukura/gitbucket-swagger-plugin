@@ -1,7 +1,11 @@
-import gitbucket.core.plugin.{AccountHook, PluginRegistry}
-import gitbucket.core.service.SystemSettingsService
-import io.github.gitbucket.solidbase.model.Version
 import javax.servlet.ServletContext
+
+import gitbucket.core.plugin.PluginRegistry
+import gitbucket.core.service.SystemSettingsService
+import gitbucket.core.service.SystemSettingsService.SystemSettings
+import io.github.gitbucket.solidbase.model.Version
+
+import scala.util.Try
 
 class Plugin extends gitbucket.core.plugin.Plugin {
   override val pluginId: String = "swagger"
@@ -11,16 +15,25 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("1.0.0"),
   )
 
-  override val assetsMappings = Seq("/swagger" -> "/swagger/assets")
+  private[this] var renderer: Option[SwaggerRenderer] = None
 
   override def initialize(registry: PluginRegistry, context: ServletContext, settings: SystemSettingsService.SystemSettings): Unit = {
-    val swagger = new SwaggerRenderer()
+    val test = Try{ new SwaggerRenderer() }
+    val swagger = test.get
     registry.addRenderer("yml", swagger)
     registry.addRenderer("yaml", swagger)
     registry.addRenderer("Yaml", swagger)
     registry.addRenderer("YAML", swagger)
     registry.addRenderer("json", swagger)
     registry.addRenderer("JSON", swagger)
+    renderer = Option(swagger)
     super.initialize(registry, context, settings)
   }
+
+  override def shutdown(registry: PluginRegistry, context: ServletContext, settings: SystemSettings): Unit = {
+    renderer.map(r => r.shutdown())
+  }
+
+  override val assetsMappings = Seq("/swagger" -> "/swagger/assets")
+
 }

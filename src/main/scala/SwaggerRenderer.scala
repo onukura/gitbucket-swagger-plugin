@@ -1,9 +1,10 @@
 import java.io
+
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
 import gitbucket.core.service.RepositoryService.RepositoryInfo
-import play.twirl.api.Html
 
+import play.twirl.api.Html
 import scala.util.{Failure, Success, Try}
 
 class SwaggerRenderer extends Renderer {
@@ -12,7 +13,7 @@ class SwaggerRenderer extends Renderer {
     import request._
     Html(Try(toHtml(filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink)(context)) match {
       case Success(v) => v
-      case Failure(e) => s"""<h2>Error</h2>"""
+      case Failure(e) => s"""<h2>Error</h2><div class="ipynb-error"><pre>$e</pre></div>"""
     })
   }
 
