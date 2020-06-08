@@ -40,6 +40,14 @@ This plugin process files only with its name in the following list.
 "openapi.yml", "openapi.yaml", "openapi.json", "swagger.yml", "swagger.yaml", "swagger.json", "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
 ```
 
+## Supported swagger file version
+
+This plugin uses [swagger-ui v3.26.0](https://github.com/swagger-api/swagger-ui/releases/tag/v3.26.0).
+
+Supported version fields are swagger: "2.0" and those that match openapi: 3.0.n (for example, openapi: 3.0.0).
+
+See also [compatibility](https://github.com/swagger-api/swagger-ui#compatibility).
+
 ## Version
 
 Plugin version|GitBucket version
