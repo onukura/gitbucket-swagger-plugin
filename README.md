@@ -52,4 +52,4 @@ See also [compatibility](https://github.com/swagger-api/swagger-ui#compatibility
 
 Plugin version|GitBucket version
 :---|:---
-1.0|4.32.x -
+1.0.x |4.32.x -
