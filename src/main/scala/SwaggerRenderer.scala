@@ -3,7 +3,9 @@ import java.io
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
 import gitbucket.core.service.RepositoryService.RepositoryInfo
-
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.JsonMethods
 import play.twirl.api.Html
 import scala.util.{Failure, Success, Try}
 
@@ -13,7 +15,7 @@ class SwaggerRenderer extends Renderer {
     import request._
     Html(Try(toHtml(filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink)(context)) match {
       case Success(v) => v
-      case Failure(e) => s"""<h2>Error</h2><div class="ipynb-error"><pre>$e</pre></div>"""
+      case Failure(e) => s"""<h2>Error</h2>"""
     })
   }
 
@@ -28,8 +30,8 @@ class SwaggerRenderer extends Renderer {
               enableWikiLink: Boolean,
               enableRefsLink: Boolean)(implicit context: Context): String = {
     val path = context.baseUrl
-    val f = new io.File(context.currentPath)
-    val basename = f.getName()
+    val basename = filePath.head
+    val ext = basename.split("\\.").last
 
     val processFilePatterns = List(
       "openapi.yml", "openapi.yaml", "openapi.json",
@@ -37,22 +39,55 @@ class SwaggerRenderer extends Renderer {
       "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
     )
 
-    if (processFilePatterns.contains(basename)) {
+    val commom_packages =
       s"""
-      <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
-      <link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
-      <script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
-      <div id="swagger-viewer">
+         |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
+         |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
+         |<script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
+         |""".stripMargin
+
+    val render_materials =
+      s"""
+         |<div id="swagger-viewer"></div>
+         |<div id="spec" hidden>$content</div>
+         |""".stripMargin
+
+    val render_functions =
+      """
+        |function render_swagger() {
+        |  const ui = SwaggerUIBundle({
+        |    spec: spec,
+        |    dom_id: '#swagger-viewer'
+        |  })
+        |  window.ui = ui
+        |}
+        |window.onload = render_swagger()
+        |try {
+        |  var preview = document.getElementById("btn-preview");
+        |  preview.onclick = render_swagger()
+        |}
+        |catch (e) {}
+        |""".stripMargin
+
+    if (processFilePatterns.contains(basename)) {
+      if (List("yml", "yml", "YAML", "Yaml", "YML").contains(ext)) {
+        s"""$commom_packages
+      <script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
+      $render_materials
       <script>
-      window.onload = function() {
-        const ui = SwaggerUIBundle({
-          url: "${context.request.getRequestURL + "?raw=true"}",
-          dom_id: '#swagger-viewer'
-        })
-        window.ui = ui
-      }
+      var spec = jsyaml.load(document.getElementById('spec').innerHTML)
+      $render_functions
       </script>
       """
+      } else {
+        s"""$commom_packages
+      $render_materials
+      <script>
+      var spec = JSON.parse(document.getElementById('spec').innerHTML)
+      $render_functions
+      </script>
+      """
+      }
     } else {
       content
     }
