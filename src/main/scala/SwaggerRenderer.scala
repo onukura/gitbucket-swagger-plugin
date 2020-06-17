@@ -1,11 +1,6 @@
-import java.io
-
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
 import gitbucket.core.service.RepositoryService.RepositoryInfo
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.json4s.jackson.JsonMethods
 import play.twirl.api.Html
 import scala.util.{Failure, Success, Try}
 
@@ -39,20 +34,28 @@ class SwaggerRenderer extends Renderer {
       "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
     )
 
-    val commom_packages =
+    if (!processFilePatterns.contains(basename)) {
+      return content
+    }
+
+    val yamlExtPatterns = List(
+      "yml", "yml", "YAML", "Yaml", "YML"
+    )
+
+    val commonPackages =
       s"""
          |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
          |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
          |<script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
          |""".stripMargin
 
-    val render_materials =
+    val renderMaterials =
       s"""
          |<div id="swagger-viewer"></div>
          |<div id="spec" hidden>$content</div>
          |""".stripMargin
 
-    val render_functions =
+    val renderFunctions =
       """
         |function render_swagger() {
         |  const ui = SwaggerUIBundle({
@@ -62,36 +65,27 @@ class SwaggerRenderer extends Renderer {
         |  window.ui = ui
         |}
         |window.onload = render_swagger()
-        |try {
-        |  var preview = document.getElementById("btn-preview");
-        |  preview.onclick = render_swagger()
-        |}
-        |catch (e) {}
         |""".stripMargin
 
-    if (processFilePatterns.contains(basename)) {
-      if (List("yml", "yml", "YAML", "Yaml", "YML").contains(ext)) {
-        s"""$commom_packages
-      <script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
-      $render_materials
-      <script>
-      var spec = jsyaml.load(document.getElementById('spec').innerHTML)
-      $render_functions
-      </script>
-      """
-      } else {
-        s"""$commom_packages
-      $render_materials
-      <script>
-      var spec = JSON.parse(document.getElementById('spec').innerHTML)
-      $render_functions
-      </script>
-      """
-      }
+    if (yamlExtPatterns.contains(ext)) {
+      s"""
+         |$commonPackages
+         |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
+         |$renderMaterials
+         |<script>
+         |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
+         |  $renderFunctions
+         |</script>
+         |""".stripMargin
     } else {
-      content
+      s"""
+         |$commonPackages
+         |$renderMaterials
+         |<script>
+         |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
+         |  $renderFunctions
+         |</script>
+         |""".stripMargin
     }
-
   }
-
 }
