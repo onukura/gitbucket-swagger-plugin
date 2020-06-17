@@ -39,13 +39,13 @@ class SwaggerRenderer extends Renderer {
       "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
     )
 
-    val yamlExtPatterns = List(
-      "yml", "yml", "YAML", "Yaml", "YML"
-    )
-
     if (!processFilePatterns.contains(basename)) {
       return content
     }
+
+    val yamlExtPatterns = List(
+      "yml", "yml", "YAML", "Yaml", "YML"
+    )
 
     val commonPackages =
       s"""
