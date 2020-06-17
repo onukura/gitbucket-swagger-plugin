@@ -1,11 +1,6 @@
-import java.io
-
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
 import gitbucket.core.service.RepositoryService.RepositoryInfo
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.json4s.jackson.JsonMethods
 import play.twirl.api.Html
 import scala.util.{Failure, Success, Try}
 
