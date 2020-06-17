@@ -65,32 +65,27 @@ class SwaggerRenderer extends Renderer {
         |  window.ui = ui
         |}
         |window.onload = render_swagger()
-        |try {
-        |  var preview = document.getElementById("btn-preview");
-        |  preview.onclick = render_swagger()
-        |}
-        |catch (e) {}
         |""".stripMargin
 
-      if (yamlExtPatterns.contains(ext)) {
-        s"""
-           |$commonPackages
-           |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
-           |$renderMaterials
-           |<script>
-           |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
-           |  $renderFunctions
-           |</script>
-           |""".stripMargin
-      } else {
-        s"""
-           |$commonPackages
-           |$renderMaterials
-           |<script>
-           |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
-           |  $renderFunctions
-           |</script>
-           |""".stripMargin
-      }
+    if (yamlExtPatterns.contains(ext)) {
+      s"""
+         |$commonPackages
+         |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
+         |$renderMaterials
+         |<script>
+         |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
+         |  $renderFunctions
+         |</script>
+         |""".stripMargin
+    } else {
+      s"""
+         |$commonPackages
+         |$renderMaterials
+         |<script>
+         |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
+         |  $renderFunctions
+         |</script>
+         |""".stripMargin
+    }
   }
 }
