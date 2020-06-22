@@ -1,6 +1,6 @@
 # gitbucket-swagger-plugin
 
-[![Build Status](https://travis-ci.org/onukura/gitbcket-swagger-plugin.svg?branch=master)](https://travis-ci.org/onukura/gitbcket-swagger-plugin)
+[![Build Status](https://travis-ci.org/onukura/gitbucket-swagger-plugin.svg?branch=master)](https://travis-ci.org/onukura/gitbucket-swagger-plugin)
 
 A GitBucket plugin for rendering swagger (openAPI) file using [swagger-ui](https://github.com/swagger-api/swagger-ui).
 
