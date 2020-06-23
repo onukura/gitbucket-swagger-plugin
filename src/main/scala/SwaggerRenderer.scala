@@ -33,7 +33,9 @@ class SwaggerRenderer extends Renderer {
     )
 
     if (!processFilePatterns.contains(basename)) {
-      return s"""<tt><pre class="plain">${urlLink(content)}</pre></tt>"""
+      return s"""
+                |<pre class="prettyprint linenums blob" style="">$content</pre>
+                |""".stripMargin
     }
 
     val jsonExtPatterns = List("json")
