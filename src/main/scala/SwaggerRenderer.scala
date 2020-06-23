@@ -1,6 +1,8 @@
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
 import gitbucket.core.service.RepositoryService.RepositoryInfo
+import gitbucket.core.view.helpers.urlLink
+import gitbucket.core.util.FileUtil
 import play.twirl.api.Html
 import scala.util.{Failure, Success, Try}
 
@@ -25,8 +27,8 @@ class SwaggerRenderer extends Renderer {
               enableWikiLink: Boolean,
               enableRefsLink: Boolean)(implicit context: Context): String = {
     val path = context.baseUrl
-    val basename = filePath.head
-    val ext = basename.split("\\.").last
+    val basename = filePath.last
+    val ext = FileUtil.getExtension(basename.toLowerCase)
 
     val processFilePatterns = List(
       "openapi.yml", "openapi.yaml", "openapi.Yaml", "openapi.YML", "openapi.json", "openapi.JSON",
@@ -34,7 +36,7 @@ class SwaggerRenderer extends Renderer {
     )
 
     if (!processFilePatterns.contains(basename)) {
-      return s"""<tt><pre class="plain">$content</pre></tt>"""
+      return s"""<tt><pre class="plain">${urlLink(content)}</pre></tt>"""
     }
 
     val jsonExtPatterns = List("json")
@@ -48,7 +50,7 @@ class SwaggerRenderer extends Renderer {
          |<div id="spec" hidden>$content</div>
          |""".stripMargin
 
-    if (jsonExtPatterns.contains(ext.toLowerCase)) {
+    if (jsonExtPatterns.contains(ext)) {
       s"""
          |$commonMaterial
          |<script>
