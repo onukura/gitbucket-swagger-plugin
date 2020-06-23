@@ -39,48 +39,42 @@ class SwaggerRenderer extends Renderer {
 
     val jsonExtPatterns = List("json")
 
-    val commonPackages =
+    val commonMaterial =
       s"""
          |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
          |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
          |<script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
-         |""".stripMargin
-
-    val renderMaterials =
-      s"""
          |<div id="swagger-viewer"></div>
          |<div id="spec" hidden>$content</div>
          |""".stripMargin
 
-    val renderFunctions =
-      """
-        |function render_swagger() {
-        |  const ui = SwaggerUIBundle({
-        |    spec: spec,
-        |    dom_id: '#swagger-viewer'
-        |  })
-        |  window.ui = ui
-        |}
-        |window.onload = render_swagger()
-        |""".stripMargin
-
     if (jsonExtPatterns.contains(ext.toLowerCase)) {
       s"""
-         |$commonPackages
-         |$renderMaterials
+         |$commonMaterial
          |<script>
-         |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
-         |  $renderFunctions
+         |  function render_swagger() {
+         |    const ui = SwaggerUIBundle({
+         |      spec: JSON.parse(document.getElementById('spec').innerHTML),
+         |      dom_id: '#swagger-viewer'
+         |    })
+         |    window.ui = ui
+         |  }
+         |  window.onload = render_swagger()
          |</script>
          |""".stripMargin
     } else {
       s"""
-         |$commonPackages
+         |$commonMaterial
          |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
-         |$renderMaterials
          |<script>
-         |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
-         |  $renderFunctions
+         |  function render_swagger() {
+         |    const ui = SwaggerUIBundle({
+         |      spec: jsyaml.load(document.getElementById('spec').innerHTML),
+         |      dom_id: '#swagger-viewer'
+         |    })
+         |    window.ui = ui
+         |  }
+         |  window.onload = render_swagger()
          |</script>
          |""".stripMargin
     }
