@@ -1,6 +1,8 @@
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
 import gitbucket.core.service.RepositoryService.RepositoryInfo
+import gitbucket.core.view.helpers.urlLink
+import gitbucket.core.util.FileUtil
 import play.twirl.api.Html
 import scala.util.{Failure, Success, Try}
 
@@ -8,10 +10,7 @@ class SwaggerRenderer extends Renderer {
 
   def render(request: RenderRequest): Html = {
     import request._
-    Html(Try(toHtml(filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink)(context)) match {
-      case Success(v) => v
-      case Failure(e) => s"""<h2>Error</h2>"""
-    })
+    Html(toHtml(filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink)(context))
   }
 
   def shutdown(): Unit = {
@@ -25,65 +24,58 @@ class SwaggerRenderer extends Renderer {
               enableWikiLink: Boolean,
               enableRefsLink: Boolean)(implicit context: Context): String = {
     val path = context.baseUrl
-    val basename = filePath.head
-    val ext = basename.split("\\.").last
+    val basename = filePath.last
+    val ext = FileUtil.getExtension(basename.toLowerCase)
 
     val processFilePatterns = List(
-      "openapi.yml", "openapi.yaml", "openapi.json",
-      "swagger.yml", "swagger.yaml", "swagger.json",
-      "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
+      "openapi.yml", "openapi.yaml", "openapi.Yaml", "openapi.YML", "openapi.json", "openapi.JSON",
+      "swagger.yml", "swagger.yaml", "swagger.Yaml", "swagger.YML", "swagger.json", "swagger.JSON",
     )
 
     if (!processFilePatterns.contains(basename)) {
-      return content
+      return s"""
+                |<pre class="prettyprint linenums blob" style="">$content</pre>
+                |""".stripMargin
     }
 
-    val yamlExtPatterns = List(
-      "yml", "yml", "YAML", "Yaml", "YML"
-    )
+    val jsonExtPatterns = List("json")
 
-    val commonPackages =
+    val commonMaterial =
       s"""
          |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/swagger-ui.css">
          |<link rel="stylesheet" type="text/css" href="$path/plugin-assets/swagger/style.css">
          |<script src="$path/plugin-assets/swagger/swagger-ui-bundle.js"></script>
-         |""".stripMargin
-
-    val renderMaterials =
-      s"""
          |<div id="swagger-viewer"></div>
          |<div id="spec" hidden>$content</div>
          |""".stripMargin
 
-    val renderFunctions =
-      """
-        |function render_swagger() {
-        |  const ui = SwaggerUIBundle({
-        |    spec: spec,
-        |    dom_id: '#swagger-viewer'
-        |  })
-        |  window.ui = ui
-        |}
-        |window.onload = render_swagger()
-        |""".stripMargin
-
-    if (yamlExtPatterns.contains(ext)) {
+    if (jsonExtPatterns.contains(ext)) {
       s"""
-         |$commonPackages
-         |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
-         |$renderMaterials
+         |$commonMaterial
          |<script>
-         |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
-         |  $renderFunctions
+         |  function render_swagger() {
+         |    const ui = SwaggerUIBundle({
+         |      spec: JSON.parse(document.getElementById('spec').innerHTML),
+         |      dom_id: '#swagger-viewer'
+         |    })
+         |    window.ui = ui
+         |  }
+         |  window.onload = render_swagger()
          |</script>
          |""".stripMargin
     } else {
       s"""
-         |$commonPackages
-         |$renderMaterials
+         |$commonMaterial
+         |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
          |<script>
-         |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
-         |  $renderFunctions
+         |  function render_swagger() {
+         |    const ui = SwaggerUIBundle({
+         |      spec: jsyaml.load(document.getElementById('spec').innerHTML),
+         |      dom_id: '#swagger-viewer'
+         |    })
+         |    window.ui = ui
+         |  }
+         |  window.onload = render_swagger()
          |</script>
          |""".stripMargin
     }

@@ -15,6 +15,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("1.0.0"),
     new Version("1.0.1"),
     new Version("1.0.2"),
+    new Version("1.0.3"),
   )
 
   private[this] var renderer: Option[SwaggerRenderer] = None
@@ -24,10 +25,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     val swagger = test.get
     registry.addRenderer("yml", swagger)
     registry.addRenderer("yaml", swagger)
-    registry.addRenderer("Yaml", swagger)
-    registry.addRenderer("YAML", swagger)
     registry.addRenderer("json", swagger)
-    registry.addRenderer("JSON", swagger)
     renderer = Option(swagger)
     super.initialize(registry, context, settings)
   }

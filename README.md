@@ -37,7 +37,8 @@ for deployment.
 This plugin process files only with its name in the following list.
 
 ```bash
-"openapi.yml", "openapi.yaml", "openapi.json", "swagger.yml", "swagger.yaml", "swagger.json", "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
+"openapi.yml", "openapi.yaml", "openapi.Yaml", "openapi.YML", "openapi.json", "openapi.JSON",
+"swagger.yml", "swagger.yaml", "swagger.Yaml", "swagger.YML", "swagger.json", "swagger.JSON"
 ```
 
 ## Supported swagger file version
