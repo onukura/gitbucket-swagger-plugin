@@ -29,18 +29,15 @@ class SwaggerRenderer extends Renderer {
     val ext = basename.split("\\.").last
 
     val processFilePatterns = List(
-      "openapi.yml", "openapi.yaml", "openapi.json",
-      "swagger.yml", "swagger.yaml", "swagger.json",
-      "OpenAPI.YML", "openapi.Yaml", "openapi.JSON"
+      "openapi.yml", "openapi.yaml", "openapi.Yaml", "openapi.YML", "openapi.json", "openapi.JSON",
+      "swagger.yml", "swagger.yaml", "swagger.Yaml", "swagger.YML", "swagger.json", "swagger.JSON",
     )
 
     if (!processFilePatterns.contains(basename)) {
       return content
     }
 
-    val yamlExtPatterns = List(
-      "yml", "yml", "YAML", "Yaml", "YML"
-    )
+    val jsonExtPatterns = List("json")
 
     val commonPackages =
       s"""
@@ -67,22 +64,22 @@ class SwaggerRenderer extends Renderer {
         |window.onload = render_swagger()
         |""".stripMargin
 
-    if (yamlExtPatterns.contains(ext)) {
+    if (jsonExtPatterns.contains(ext.toLowerCase)) {
       s"""
          |$commonPackages
-         |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
          |$renderMaterials
          |<script>
-         |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
+         |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
          |  $renderFunctions
          |</script>
          |""".stripMargin
     } else {
       s"""
          |$commonPackages
+         |<script src="$path/plugin-assets/swagger/js-yaml.min.js"></script>
          |$renderMaterials
          |<script>
-         |  var spec = JSON.parse(document.getElementById('spec').innerHTML)
+         |  var spec = jsyaml.load(document.getElementById('spec').innerHTML)
          |  $renderFunctions
          |</script>
          |""".stripMargin
