@@ -1,4 +1,20 @@
-#js-openapi-viewer pre.version {
+#swagger-viewer {
+  all: initial;
+}
+
+#swagger-viewer pre.version {
   background-color: transparent;
   border: transparent;
+}
+
+#swagger-viewer .wrapper {
+  background-color: transparent;
+}
+
+.swagger-ui .scheme-container .schemes>label {
+    margin: 0 15px 0 0;
+}
+
+.swagger-ui table {
+    padding: 0 0;
 }
