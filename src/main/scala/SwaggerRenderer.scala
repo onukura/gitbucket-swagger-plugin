@@ -1,28 +1,19 @@
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
-import gitbucket.core.service.RepositoryService.RepositoryInfo
-import gitbucket.core.view.helpers.urlLink
 import gitbucket.core.util.FileUtil
 import play.twirl.api.Html
-import scala.util.{Failure, Success, Try}
 
 class SwaggerRenderer extends Renderer {
 
   def render(request: RenderRequest): Html = {
     import request._
-    Html(toHtml(filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink)(context))
+    Html(toHtml(filePath, fileContent)(context))
   }
 
   def shutdown(): Unit = {
   }
 
-  def toHtml(
-              filePath: List[String],
-              content: String,
-              branch: String,
-              repository: RepositoryInfo,
-              enableWikiLink: Boolean,
-              enableRefsLink: Boolean)(implicit context: Context): String = {
+  def toHtml(filePath: List[String], content: String)(implicit context: Context): String = {
     val path = context.baseUrl
     val basename = filePath.last
     val ext = FileUtil.getExtension(basename.toLowerCase)
