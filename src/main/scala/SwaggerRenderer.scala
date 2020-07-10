@@ -1,10 +1,7 @@
 import gitbucket.core.controller.Context
 import gitbucket.core.plugin.{RenderRequest, Renderer}
-import gitbucket.core.service.RepositoryService.RepositoryInfo
-import gitbucket.core.view.helpers.urlLink
 import gitbucket.core.util.FileUtil
 import play.twirl.api.Html
-import scala.util.{Failure, Success, Try}
 
 class SwaggerRenderer extends Renderer {
 
