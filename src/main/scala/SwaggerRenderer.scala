@@ -16,13 +16,7 @@ class SwaggerRenderer extends Renderer {
   def shutdown(): Unit = {
   }
 
-  def toHtml(
-              filePath: List[String],
-              content: String,
-              branch: String,
-              repository: RepositoryInfo,
-              enableWikiLink: Boolean,
-              enableRefsLink: Boolean)(implicit context: Context): String = {
+  def toHtml(filePath: List[String], content: String)(implicit context: Context): String = {
     val path = context.baseUrl
     val basename = filePath.last
     val ext = FileUtil.getExtension(basename.toLowerCase)
