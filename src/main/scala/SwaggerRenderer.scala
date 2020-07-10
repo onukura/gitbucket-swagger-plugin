@@ -7,7 +7,7 @@ class SwaggerRenderer extends Renderer {
 
   def render(request: RenderRequest): Html = {
     import request._
-    Html(toHtml(filePath, fileContent, branch, repository, enableWikiLink, enableRefsLink)(context))
+    Html(toHtml(filePath, fileContent)(context))
   }
 
   def shutdown(): Unit = {
