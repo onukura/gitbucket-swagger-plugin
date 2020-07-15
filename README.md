@@ -43,7 +43,7 @@ This plugin process files only with its name in the following list.
 
 ## Supported swagger file version
 
-This plugin uses [swagger-ui v3.26.0](https://github.com/swagger-api/swagger-ui/releases/tag/v3.26.0).
+This plugin uses [swagger-ui v3.28.0](https://github.com/swagger-api/swagger-ui/releases/tag/v3.28.0).
 
 Supported version fields are swagger: "2.0" and those that match openapi: 3.0.n (for example, openapi: 3.0.0).
 
