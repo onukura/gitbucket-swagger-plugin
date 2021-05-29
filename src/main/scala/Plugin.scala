@@ -18,6 +18,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("1.0.3"),
     new Version("1.0.4"),
     new Version("1.0.5"),
+    new Version("1.0.6"),
   )
 
   private[this] var renderer: Option[SwaggerRenderer] = None
@@ -33,7 +34,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
   }
 
   override def shutdown(registry: PluginRegistry, context: ServletContext, settings: SystemSettings): Unit = {
-    renderer.map(r => r.shutdown())
+    renderer.foreach(r => r.shutdown())
   }
 
   override val assetsMappings = Seq("/swagger" -> "/swagger/assets")
