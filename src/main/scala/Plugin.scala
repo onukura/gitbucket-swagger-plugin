@@ -19,6 +19,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("1.0.4"),
     new Version("1.0.5"),
     new Version("1.0.6"),
+    new Version("1.0.7"),
   )
 
   private[this] var renderer: Option[SwaggerRenderer] = None

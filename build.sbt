@@ -1,5 +1,5 @@
 name := "gitbucket-swagger-plugin"
 organization := "io.github.gitbucket"
-version := "1.0.6"
+version := "1.0.7"
 scalaVersion := "2.13.6"
 gitbucketVersion := "4.35.0"
